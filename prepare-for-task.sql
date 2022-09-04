@@ -21,7 +21,7 @@ CREATE TABLE exam_results (
 	id SERIAL PRIMARY KEY,
 	student_id int NOT NULL REFERENCES students (id) ON DELETE CASCADE,
 	subject_id int NOT NULL REFERENCES subjects (id) ON DELETE CASCADE,
-	mark int NOT NULL,
+	mark int NOT NULL CONSTRAINT mark_validator CHECK (mark BETWEEN 1 AND 10),
 	create_timestamp timestamp NOT NULL DEFAULT NOW(),
 	update_timestamp timestamp
 );
