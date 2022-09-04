@@ -1,38 +1,43 @@
--- [Prepare] Create tables
+-- [Prepare] Create tables with constraints
 
 CREATE TABLE students (
-	name varchar,
-	surname varchar,
-	birthday date,
-	phone varchar,
-	skill varchar,
-	create_timestamp timestamp,
+	id SERIAL PRIMARY KEY,
+	name varchar NOT NULL,
+	surname varchar NOT NULL,
+	birthday date NOT NULL,
+	phone varchar NOT NULL,
+	skill varchar NOT NULL,
+	create_timestamp timestamp NOT NULL DEFAULT NOW(),
 	update_timestamp timestamp
 );
 
 CREATE TABLE subjects (
-	name varchar,
-	tutor varchar
+	id SERIAL PRIMARY KEY,
+	name varchar NOT NULL,
+	tutor varchar NOT NULL
 );
 
 CREATE TABLE exam_results (
-	student_id int,
-	subject_id int,
-	mark int
+	id SERIAL PRIMARY KEY,
+	student_id int NOT NULL REFERENCES students (id) ON DELETE CASCADE,
+	subject_id int NOT NULL REFERENCES subjects (id) ON DELETE CASCADE,
+	mark int NOT NULL,
+	create_timestamp timestamp NOT NULL DEFAULT NOW(),
+	update_timestamp timestamp
 );
 
-ALTER TABLE students ADD COLUMN id SERIAL PRIMARY KEY;
-ALTER TABLE subjects ADD COLUMN id SERIAL PRIMARY KEY;
-ALTER TABLE exam_results ADD COLUMN id SERIAL PRIMARY KEY;
+CREATE OR REPLACE FUNCTION trigger_set_update_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+	NEW.update_timestamp = NOW();
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-ALTER TABLE exam_results
-ADD CONSTRAINT student_id_fkey
-FOREIGN KEY (student_id)
-REFERENCES students(id)
-ON DELETE CASCADE;
+CREATE TRIGGER set_update_timestamp_on_student
+BEFORE UPDATE ON students
+FOR EACH ROW EXECUTE PROCEDURE trigger_set_update_timestamp();
 
-ALTER TABLE exam_results
-ADD CONSTRAINT subject_id_fkey
-FOREIGN KEY (subject_id)
-REFERENCES subjects(id)
-ON DELETE CASCADE;
+CREATE TRIGGER set_update_timestamp_on_exam_result
+BEFORE UPDATE ON exam_results
+FOR EACH ROW EXECUTE PROCEDURE trigger_set_update_timestamp();
