@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class DataGenerator implements CommandLineRunner {
@@ -37,7 +38,7 @@ public class DataGenerator implements CommandLineRunner {
     }
 
     private void generateStudents() {
-        int studentsCount = template.queryForObject("SELECT COUNT(*) FROM students", Integer.class);
+        int studentsCount = Objects.requireNonNull(template.queryForObject("SELECT COUNT(*) FROM students", Integer.class));
         if (studentsCount != 0) {
             return;
         }
@@ -77,7 +78,7 @@ public class DataGenerator implements CommandLineRunner {
     }
 
     private void generateSubjects() {
-        int subjectsCount = template.queryForObject("SELECT COUNT(*) FROM subjects", Integer.class);
+        int subjectsCount = Objects.requireNonNull(template.queryForObject("SELECT COUNT(*) FROM subjects", Integer.class));
         if (subjectsCount != 0) {
             return;
         }
@@ -95,7 +96,7 @@ public class DataGenerator implements CommandLineRunner {
     }
 
     private void generateExamResults() {
-        int examResultsCount = template.queryForObject("SELECT COUNT(*) FROM exam_results", Integer.class);
+        int examResultsCount = Objects.requireNonNull(template.queryForObject("SELECT COUNT(*) FROM exam_results", Integer.class));
         if (examResultsCount != 0) {
             return;
         }
