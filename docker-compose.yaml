@@ -1,0 +1,13 @@
+version: '3.0'
+services:
+  postgres:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: "/var/lib/postgresql/data/.docker-data/advanced-sql-db"
+    ports:
+      - "5432:5432"
+    volumes:
+      - .:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
