@@ -6,7 +6,7 @@ CREATE TABLE students (
 	surname varchar NOT NULL,
 	birthday date NOT NULL CONSTRAINT birthday_validator CHECK (birthday < (NOW() - interval '18 year')::date),
 	phone varchar NOT NULL,
-	skill varchar NOT NULL,
+	skill varchar NOT NULL CONSTRAINT skill_validator CHECK (skill NOT LIKE '%,%'),
 	create_timestamp timestamp NOT NULL DEFAULT NOW(),
 	update_timestamp timestamp
 );
