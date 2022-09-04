@@ -2,9 +2,9 @@
 
 CREATE TABLE students (
 	id SERIAL PRIMARY KEY,
-	name varchar NOT NULL,
+	name varchar NOT NULL CONSTRAINT name_validator CHECK (name NOT LIKE ALL (ARRAY['%@%', '%#%', '%$%'])),
 	surname varchar NOT NULL,
-	birthday date NOT NULL,
+	birthday date NOT NULL CONSTRAINT birthday_validator CHECK (birthday < (NOW() - interval '18 year')::date),
 	phone varchar NOT NULL,
 	skill varchar NOT NULL,
 	create_timestamp timestamp NOT NULL DEFAULT NOW(),
@@ -26,6 +26,8 @@ CREATE TABLE exam_results (
 	update_timestamp timestamp
 );
 
+-- [Prepare] Function for add autogenerate update_timestamp
+
 CREATE OR REPLACE FUNCTION trigger_set_update_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -33,6 +35,8 @@ BEGIN
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+-- [Prepare] Add triggers for update
 
 CREATE TRIGGER set_update_timestamp_on_student
 BEFORE UPDATE ON students
