@@ -11,7 +11,3 @@ WHERE id IN (
 	GROUP BY subject_id
 	HAVING count(subject_id) = 1
 )
-
-
-
-
