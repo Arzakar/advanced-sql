@@ -107,7 +107,7 @@ public class DataGenerator implements CommandLineRunner {
         for (int studentId : studentIds) {
             for (int i = 0; i < 10; i++) {
                 int subjectId = subjectIds.get((int) (Math.random() * (subjectIds.size() - 1)));
-                int mark = (int) (Math.random() * 9) + 1;
+                int mark = (int) Math.round(Math.random() * 9) + 1;
 
                 String query = String.format("INSERT INTO exam_results (student_id, subject_id, mark)\n" +
                                              "VALUES (%d, %d, %d)", studentId, subjectId, mark);
